@@ -1,0 +1,38 @@
+/* styles.css */
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("front-view-of-elections-concept-with-copy-space.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.col-lg-12 {
+    min-width: 100px; 
+}
+
+
+.table th,
+.table td {
+    padding: 1px;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 80px; 
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 80px; 
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 80px; 
+}

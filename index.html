@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Election Results</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom-style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="container" style="width: 650px;">
+    <div id="votingPeriod" class="text-center" style="margin-top: 20px;">
+        <p>Voting Opens: <span id="votingStart"></span></p>
+        <p>Voting Ends: <span id="votingEnd"></span></p>
+        <div id="countdownTimer" class="text-center" style="margin-top: 20px;">
+            <h5>Election Countdown: <span id="timer"></span></h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="text-center">Election Results</h1>
+            <hr/><br/>
+            <div id="loader"><p class="text-center">Loading...</p></div>
+            <div id="content" style="display: none;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesResults"></tbody>
+                </table>
+                <hr/>
+                <form id="voteForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="candidatesSelect">Select Candidate</label>
+                        <select class="form-control" id="candidatesSelect"></select>
+                    </div>
+                    <button id="voteButton" class="btn btn-primary">Vote</button>
+                    <button id="showPreferencesBtn" class="btn btn-info">Show Candidates Statements</button>
+                </form>
+                <p id="accountAddress" class="text-left"></p>
+            </div>
+            <div id="adminMessage" style="display: none;"></div>
+            <div id="adminSection" style="display: none;">
+                <h2>Admin Actions</h2>
+                <hr/>
+                <div class="form-group">
+                    <label for="candidateName">Candidate Name</label>
+                    <input type="text" class="form-control" id="candidateName">
+                </div>
+                <button id="addCandidateButton" class="btn btn-success">Add Candidate</button>
+                <hr/>
+                <h3>Set Voting Period</h3>
+                <form id="setVotingPeriodForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="startTime">Start Time:</label>
+                        <input type="datetime-local" id="startTime" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="endTime">End Time:</label>
+                        <input type="datetime-local" id="endTime" class="form-control">
+                    </div>
+                    <button id="setPeriodButton" class="btn btn-info">Set Period</button>
+                    <button id="toggleElectionBookButton" class="btn btn-danger">Election Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fruitPreferenceModal" tabindex="-1" role="dialog" aria-labelledby="fruitPreferenceLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fruitPreferenceLabel">Fruit Preference</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>What Fruits Do You Prefer</p>
+                <div class="form-check">
+                    <label class="form-check-label" for="appleCheck">Apple</label>
+                    <input class="form-check-input" type="checkbox" value="apple" id="appleCheck">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label" for="bananaCheck">Banana</label>
+                    <input class="form-check-input" type="checkbox" value="banana" id="bananaCheck">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label" for="kiwiCheck">Kiwi</label>
+                    <input class="form-check-input" type="checkbox" value="kiwi" id="kiwiCheck">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label" for="strawberryCheck">Strawberry</label>
+                    <input class="form-check-input" type="checkbox" value="strawberry" id="strawberryCheck">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label" for="melonCheck">Melon</label>
+                    <input class="form-check-input" type="checkbox" value="melon" id="melonCheck">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="App.handleFruitPreference()">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fruitPreferencesModal" tabindex="-1" role="dialog" aria-labelledby="preferencesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="preferencesModalLabel">Fruit Preferences</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Candidate Name</th>
+                            <th scope="col">Apple</th>
+                            <th scope="col">Banana</th>
+                            <th scope="col">Kiwi</th>
+                            <th scope="col">Strawberry</th>
+                            <th scope="col">Melon</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preferencesTableBody">
+
+                    </tbody>
+                </table>
+                <button id="clearPreferencesBtn" class="btn btn-danger">Clear Candidate Preferences</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/web3.min.js"></script>
+<script src="js/truffle-contract.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+    $(window).on('load', function() {
+        App.init().then(function() {
+            $('#voteButton').click(function() {
+                App.castVote();
+            });
+
+            $('#addCandidateButton').click(function() {
+                App.addCandidate();
+            });
+
+            $('#setPeriodButton').click(function() {
+                App.setVotingPeriod();
+            });
+
+            $('#toggleElectionBookButton').click(function() {
+                const votes = JSON.parse(localStorage.getItem('votes')) || [];
+                let electionBookContent = '<link href="css/bootstrap.min.css" rel="stylesheet"><div class="container" style="margin-top: 20px;"><h2 class="text-center">Election Book</h2><table class="table"><thead><tr><th scope="col">Voter Address (AES)</th><th scope="col">Vote Timestamp</th><th scope="col">Candidate Name</th></tr></thead><tbody>';
+                
+                votes.forEach(vote => {
+                    electionBookContent += `<tr><td>${vote.account.substr(0,20)}</td><td>${vote.timestamp}</td><td>${vote.candidateName}</td></tr>`;
+                });
+
+                electionBookContent += '</tbody></table><button id="clearTableBtn" class="btn btn-danger">Clear Election Book Table</button></div>';
+
+                const electionBookWindow = window.open('', 'Election Book', 'width=800,height=600');
+                electionBookWindow.document.write(electionBookContent);
+                electionBookWindow.document.close();
+                
+                electionBookWindow.onload = function() {
+                    const btn = electionBookWindow.document.getElementById('clearTableBtn');
+                    btn.onclick = function() {
+                        localStorage.removeItem('votes');
+                        alert('Election book cleared.');
+                        electionBookWindow.close();
+                    };
+                };
+            });
+
+            $('#clearPreferencesBtn').click(function() {
+                localStorage.removeItem('candidatePreferences');
+                App.candidatePreferences = {};
+                $('#fruitPreferencesModal').modal('hide');
+                alert('Candidate preferences cleared.');
+            });
+        });
+    });
+</script>
+</body>
+</html>
